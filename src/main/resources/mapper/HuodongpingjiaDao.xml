@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.HuodongpingjiaDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.entity.HuodongpingjiaEntity" id="huodongpingjiaMap">
+        <result property="fuzerenzhanghao" column="fuzerenzhanghao"/>
+        <result property="fuzerenxingming" column="fuzerenxingming"/>
+        <result property="shetuanbianhao" column="shetuanbianhao"/>
+        <result property="shetuanmingcheng" column="shetuanmingcheng"/>
+        <result property="huodongmingcheng" column="huodongmingcheng"/>
+        <result property="huodongleixing" column="huodongleixing"/>
+        <result property="huodongtupian" column="huodongtupian"/>
+        <result property="huodongdidian" column="huodongdidian"/>
+        <result property="yonghuzhanghao" column="yonghuzhanghao"/>
+        <result property="yonghuxingming" column="yonghuxingming"/>
+        <result property="pingjiashijian" column="pingjiashijian"/>
+        <result property="huodongpingfen" column="huodongpingfen"/>
+        <result property="huodongpingjia" column="huodongpingjia"/>
+        <result property="huodongjianyi" column="huodongjianyi"/>
+    </resultMap>
+
+	<select id="selectListVO"
+		resultType="com.entity.vo.HuodongpingjiaVO" >
+		SELECT * FROM huodongpingjia  huodongpingjia         
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectVO"
+		resultType="com.entity.vo.HuodongpingjiaVO" >
+		SELECT  huodongpingjia.* FROM huodongpingjia  huodongpingjia 	
+ 		<where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+
+    <select id="selectListView"
+		resultType="com.entity.view.HuodongpingjiaView" >
+
+		SELECT  huodongpingjia.* FROM huodongpingjia  huodongpingjia 	        
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectView"
+		resultType="com.entity.view.HuodongpingjiaView" >
+		SELECT * FROM huodongpingjia  huodongpingjia <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+
+    <select id="selectValue" resultType="map" >
+        SELECT ${params.xColumn}, ROUND(sum(${params.yColumn}),1) total FROM huodongpingjia
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.xColumn}
+    </select>
+
+    <select id="selectTimeStatValue" resultType="map" >
+        <if test = 'params.timeStatType == "日"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m-%d') ${params.xColumn}, sum(${params.yColumn}) total FROM huodongpingjia
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y-%m-%d')
+        </if>
+        <if test = 'params.timeStatType == "月"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m') ${params.xColumn}, sum(${params.yColumn}) total FROM huodongpingjia
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y-%m')
+        </if>
+        <if test = 'params.timeStatType == "年"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y') ${params.xColumn}, sum(${params.yColumn}) total FROM huodongpingjia
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y')
+        </if>
+    </select>
+
+    <select id="selectGroup" resultType="map" >
+        SELECT ${params.column} , count(1) total FROM huodongpingjia
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.column}
+    </select>
+
+
+    <select id="huodongmingchenghuodongpingfenTypeStat" resultType="map" >
+        select
+        huodongmingcheng,
+        sum(case when huodongpingfen in ('一分') then 1 else 0 end) as 一分,        sum(case when huodongpingfen in ('二分') then 1 else 0 end) as 二分,        sum(case when huodongpingfen in ('三分') then 1 else 0 end) as 三分,        sum(case when huodongpingfen in ('四分') then 1 else 0 end) as 四分,        sum(case when huodongpingfen in ('五分') then 1 else 0 end) as 五分        from huodongpingjia
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by huodongmingcheng
+    </select>
+
+
+</mapper>
